@@ -1,4 +1,6 @@
 
+using Microsoft.EntityFrameworkCore;
+using SharpTask.Data;
 using SharpTask.Services;
 
 namespace SharpTask
@@ -12,10 +14,10 @@ namespace SharpTask
             // Add services to the container.
 
             builder.Services.AddEndpointsApiExplorer(); 
-            builder.Services.AddSwaggerGen();           
+            builder.Services.AddSwaggerGen();
 
 
-            builder.Services.AddSingleton<ITaskService, TaskService>();
+            builder.Services.AddScoped<ITaskService, SqlTaskService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -32,7 +34,8 @@ namespace SharpTask
                 });
             });
 
-
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
             var app = builder.Build();

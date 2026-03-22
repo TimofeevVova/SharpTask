@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SharpTask.Models;
 using SharpTask.Services;
 
@@ -22,7 +23,6 @@ namespace SharpTask.Controllers
             return NoContent(); // Стандартный ответ при успешном обновлении (204)
         }
 
-
         // Удаление задачи: DELETE api/tasks/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -32,7 +32,6 @@ namespace SharpTask.Controllers
 
             return NoContent();
         }
-
 
         // Внедряем сервис через конструктор (DI)
         public TasksController(ITaskService taskService)
@@ -50,6 +49,5 @@ namespace SharpTask.Controllers
             return CreatedAtAction(nameof(GetAll), new { id = task.Id }, task);
         }
 
-        // Сюда добавь методы для Update и Delete по аналогии
     }
 }
