@@ -1,0 +1,6 @@
+@SharpTask_HostAddress = http://localhost:5265
+
+GET {{SharpTask_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
