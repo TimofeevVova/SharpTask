@@ -1,7 +1,4 @@
 <Solution>
-  <Project Path="../SharpTaskVisual/SharpTask.Visual.esproj">
-    <Build />
-    <Deploy />
-  </Project>
+  <Project Path="../SharprTask.Visual/SharprTask.Visual.csproj" Id="ed90dcec-57c4-4e02-b0cd-00e515c7df1d" />
   <Project Path="SharpTask.API.csproj" />
 </Solution>

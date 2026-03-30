@@ -27,16 +27,27 @@ namespace SharpTask.Services
         // создать
         public void Add(TodoTask task)
         {
-            _db.Add(task);
+            // Принудительно помечаем даты как UTC
+            task.CreatedDate = DateTime.SpecifyKind(task.CreatedDate, DateTimeKind.Utc);
+
+            if (task.EndTime != default)
+            {
+                task.EndTime = DateTime.SpecifyKind(task.EndTime, DateTimeKind.Utc);
+            }
+
+            _db.Tasks.Add(task);
             _db.SaveChanges();
         }
 
         // редактировать 
         public bool Update(TodoTask updatedTask)
         {
-            _db.Tasks.Update(updatedTask); // EF сам найдет задачу по Id и подготовит обновление
-            var changed = _db.SaveChanges(); // РЕАЛЬНОЕ сохранение в БД
-            return changed > 0; // Если хоть одна строка изменилась, вернет true
+            // Принудительно ставим пометку UTC для дат
+            updatedTask.CreatedDate = DateTime.SpecifyKind(updatedTask.CreatedDate, DateTimeKind.Utc);
+            updatedTask.EndTime = DateTime.SpecifyKind(updatedTask.EndTime, DateTimeKind.Utc);
+
+            _db.Tasks.Update(updatedTask);
+            return _db.SaveChanges() > 0;
         }
 
         // удалить 

@@ -11,29 +11,16 @@ namespace SharpTask
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            builder.Services.AddEndpointsApiExplorer(); 
+            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-
             builder.Services.AddScoped<ITaskService, SqlTaskService>();
-
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
-            builder.Services.AddCors(options => {
-                options.AddPolicy("AllowVueApp", policy => {
-                    policy.WithOrigins("http://localhost:5173")
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                });
-            });
-
+            // ОСТАВЛЯЕМ ТОЛЬКО ЭТОТ БЛОК CORS
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", policy =>
+                options.AddPolicy("MainPolicy", policy =>
                 {
                     policy.AllowAnyOrigin()
                           .AllowAnyMethod()
@@ -44,24 +31,21 @@ namespace SharpTask
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-                                    
             app.UseHttpsRedirection();
-            app.UseCors("AllowVueApp");
-            app.UseCors("AllowAll");
+
+            app.UseRouting(); // Роутинг ПЕРЕД Cors
+
+            app.UseCors("MainPolicy"); // Применяем политику
+
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
